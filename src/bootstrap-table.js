@@ -416,6 +416,9 @@
         onUncheckSome: function (rows) {
             return false;
         },
+        onBeforeLoad: function (args) {
+            return { cancel : false };
+        },
         onLoadSuccess: function (data) {
             return false;
         },
@@ -542,6 +545,7 @@
         'uncheck-all.bs.table': 'onUncheckAll',
         'check-some.bs.table': 'onCheckSome',
         'uncheck-some.bs.table': 'onUncheckSome',
+        'before-load.bs.table': 'onBeforeLoad',
         'load-success.bs.table': 'onLoadSuccess',
         'load-error.bs.table': 'onLoadError',
         'column-switch.bs.table': 'onColumnSwitch',
@@ -2005,6 +2009,14 @@
                 if (!silent) that.$tableLoading.hide();
             }
         });
+        
+        var args = {cancel : false};
+        that.trigger('before-load', args);
+        if(args.cancel){
+        	this.$tableLoading.hide();
+        	this.removeAll();
+        	return;
+        }
 
         if (this.options.ajax) {
             calculateObjectValue(this, this.options.ajax, [request], null);
